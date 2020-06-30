@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.LIGY.health.mapper.UserManageMapper">
+    <!--新增-->
+    <insert id="add" parameterType="user" >
+        insert into t_user(username,password,gender,birthday,telephone,station,remark)
+        VALUES
+        (#{username},#{password},#{gender},#{birthday},#{telephone},#{station},#{remark})
+    </insert>
+
+    <!--分页查询-->
+    <select id="selectByCondition" parameterType="string" resultType="com.LIGY.pojo.User">
+        select * from t_user
+        <if test="value != null and value.length > 0">
+            where remark = #{value} or username = #{value}
+        </if>
+    </select>
+
+    <!--绑定用户和角色-->
+    <insert id="setUserAndRole" parameterType="map">
+        insert into t_user_role (user_id, role_id)
+        VALUES (#{user_id},#{role_id})
+    </insert>
+
+
+
+    <!--用户提交时的数据回显功能-->
+    <select id="findRoleIdsByUserIds" resultType="int" parameterType="int">
+        select role_id from t_user_role where user_id = #{id}
+    </select>
+
+    <!--向中间表删除数据，检查组和检查项的关联关系-->
+    <delete id="deleteAssociation" parameterType="Integer" >
+        DELETE  from t_user_role WHERE  user_id = #{id}
+    </delete>
+
+</mapper>

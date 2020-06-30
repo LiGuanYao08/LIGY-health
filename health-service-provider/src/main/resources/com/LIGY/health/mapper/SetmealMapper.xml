@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.LIGY.health.mapper.SetmealMapper">
+    <!--新增套餐-->
+    <insert id="add" parameterType="setmeal" >
+        <selectKey resultType="Integer" order="AFTER" keyProperty="id">
+            select last_insert_id()
+        </selectKey>
+        insert into t_setmeal(code,name,sex,age,helpCode,price,remark,attention,img)
+        VALUES
+        (#{code},#{name},#{sex},#{age},#{helpCode},#{price},#{remark},#{attention},#{img})
+    </insert>
+    <!--绑定套餐和检查组多对多关系-->
+    <insert id="setSetmealAndCheckGroup" parameterType="hashmap">
+        insert into t_setmeal_checkgroup (setmeal_id, checkgroup_id)
+        VALUES (#{setmeal_id},#{checkgroup_id})
+    </insert>
+    <!--分页查询-->
+    <select id="selectByCondition" parameterType="string" resultType="setmeal">
+        select * from t_setmeal
+        <if test="value != null and value.length > 0">
+            where code = #{value} or name = #{value} or helpCode = #{value}
+        </if>
+    </select>
+    <!--查询所有套餐-->
+    <select id="findAll" resultType="setmeal">
+        select * from t_setmeal
+    </select>
+    <!--查询套餐详情-->
+    <select id="findById" resultMap="resultMap" parameterType="int">
+        select
+        s.id as setmeal_id,
+        s.name as s_name,
+        s.code as s_code,
+        s.helpCode as s_helpCode,
+        s.sex as s_sex,
+        s.age as s_age,
+        s.price as s_price,
+        s.remark as s_remark,
+        s.attention as s_attention,
+        s.img as s_img,
+        g.id as check_group_id,
+        g.code as g_code,
+        g.name as g_name,
+        g.helpCode as g_helpCode,
+        g.sex as g_sex,
+        g.remark as g_remark,
+        g.attention as g_attention,
+        i.id as check_item_id,
+        i.code as i_code,
+        i.name  as i_name,
+        i.sex as i_sex,
+        i.age as i_age,
+        i.price as i_price,
+        i.type as i_type,
+        i.attention as i_attention,
+        i.remark as i_remark
+        from t_setmeal s
+        join t_setmeal_checkgroup sg on s.id = sg.setmeal_id
+        join t_checkgroup g on g.id = sg.checkgroup_id
+        join t_checkgroup_checkitem gi on gi.checkgroup_id = sg.checkgroup_id
+        join t_checkitem i on i.id = gi.checkitem_id
+        where s.id = #{value}
+    </select>
+    <resultMap id="resultMap" type="setmeal">
+        <id column="setmeal_id" property="id"></id>
+        <result column="s_name" property="name"></result>
+        <result column="s_code" property="code"/>
+        <result column="s_helpCode" property="helpCode"/>
+        <result column="s_sex" property="sex"/>
+        <result column="s_age" property="age"/>
+        <result column="s_remark" property="remark"/>
+        <result column="s_attention" property="attention"/>
+        <result column="s_img" property="img"/>
+
+        <collection property="checkGroups" ofType="checkGroup">
+            <id column="check_group_id" property="id"/>
+            <result column="g_code" property="code"/>
+            <result column="g_name" property="name"/>
+            <result column="g_helpCode" property="helpCode"/>
+            <result column="g_sex" property="sex"/>
+            <result column="g_remark" property="remark"/>
+            <result column="g_attention" property="attention"/>
+
+            <collection property="checkItems" ofType="checkItem">
+                <id column="check_item_id" property="id"/>
+                <result column="i_code" property="code"/>
+                <result column="i_name" property="name"/>
+                <result column="i_sex" property="sex"/>
+                <result column="i_age" property="age"/>
+                <result column="i_price" property="price"/>
+                <result column="i_type" property="type"/>
+                <result column="i_remark" property="remark"/>
+                <result column="i_attention" property="attention"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <!--查询套餐预约情况-->
+    <select id="findSetmealCount" resultType="map" >
+        SELECT s.name,COUNT(o.`id`) AS value FROM t_setmeal s,t_order o WHERE s.id = o.`setmeal_id` GROUP BY s.`name`
+    </select>
+
+    <!--更新套餐-->
+    <update id="updateSetmeal" parameterType="com.LIGY.pojo.Setmeal">
+        update t_setmeal
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="helpCode != null">
+                helpCode = #{helpCode},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="attention != null">
+                attention = #{attention},
+            </if>
+            <if test="img != null">
+                img = #{img},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSetmeal" parameterType="Integer" >
+        DELETE  from t_setmeal WHERE  id = #{id}
+    </delete>
+</mapper>

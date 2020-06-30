@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.LIGY.health.mapper.OrderSettingMapper">
+    <!--根据预约日期查询数量-->
+    <select id="findCountByOrderDate" resultType="long" parameterType="date">
+        select count(*) from t_ordersetting where orderDate = #{orderDate}
+    </select>
+    <!--根据日期来更新预约-->
+    <update id="editNumberByOrderDate" parameterType="orderSetting">
+        update t_ordersetting set number = #{number} where orderDate = #{orderDate}
+    </update>
+    <!--根据日期来新增预约-->
+    <insert id="add" parameterType="orderSetting">
+        insert into t_ordersetting (orderDate,number,reservations) values (#{orderDate},#{number},#{reservations})
+    </insert>
+    <!--通过年月来查询单月的预约信息-->
+    <select id="getOrderSettingByMonth" parameterType="hashmap" resultType="orderSetting">
+        select * from t_ordersetting where orderDate between #{begin} and #{end}
+    </select>
+    <!--修改指定日期的预约信息-->
+    <update id="editNumberByDate" parameterType="orderSetting">
+        update t_ordersetting set number = #{number} where orderDate = #{orderDate}
+    </update>
+    <!--查询指定日期的预约单信息-->
+    <select id="findByOrderDate" parameterType="date" resultType="orderSetting">
+        select * from t_ordersetting where orderDate = #{orderDate}
+    </select>
+    <!--更新指定日期的已预约人数-->
+    <update id="editReservationsByOrderDate" parameterType="orderSetting">
+        update t_ordersetting set reservations = #{reservations} where orderDate = #{orderDate}
+    </update>
+    <!--查询所有预约人数-->
+    <select id="findAll" resultType="map">
+        SELECT o.id ,orderDate ,orderType ,orderStatus,NAME,phoneNumber
+        FROM t_order o , t_member m
+        WHERE o.member_id = m.id GROUP BY o.`id`
+    </select>
+    <!--分页查询，条件查询-->
+    <select id="selectByCondition" resultType="map" parameterType="string">
+        SELECT o.id , DATE_FORMAT(orderDate,'%Y-%m-%d') as orderDate ,orderType ,orderStatus,name,phoneNumber
+        FROM t_order o , t_member m
+        <where>
+        o.member_id = m.id
+            <if test="name != null and name !='' ">
+                and name = #{name}
+            </if>
+            <if test="phoneNumber != null and phoneNumber !='' ">
+                and phoneNumber = #{phoneNumber}
+            </if>
+        </where>
+        GROUP BY o.`id`
+    </select>
+    <!--更新预约状态-->
+    <update id="updateOrderStatus" parameterType="Integer">
+        update t_order
+        <set>
+            orderStatus = '已到诊',
+        </set>
+        where id =#{id}
+    </update>
+    <!--取消预约状态-->
+    <update id="deleteOrderStatus" parameterType="Integer">
+        update t_order
+        <set>
+            orderStatus = '已取消',
+        </set>
+        where id =#{id}
+    </update>
+    <!--新增预约单-->
+    <insert id="addOrder" parameterType="map">
+        insert into t_order(member_id,orderDate,orderType,orderStatus,setmeal_id)
+        values (#{memberId},#{orderDate},#{orderType},#{orderStatus},#{setmealId})
+    </insert>
+    <!--先新增会员表-->
+    <insert id="addMember" parameterType="map">
+        <!--keyProperty对应实体类的id属性，mybatis进行自动封装，赋值到id属性上-->
+        <selectKey resultType="Integer" order="AFTER" keyProperty="id">
+            select last_insert_id()
+        </selectKey>
+        insert into t_member(name,sex,idCard,phoneNumber,regTime)
+        values (#{name},#{sex},#{idCard},#{phoneNumber},#{regTime})
+    </insert>
+</mapper>

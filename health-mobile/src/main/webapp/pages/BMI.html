@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0,user-scalable=no,minimal-ui">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../img/asset-favico.ico">
+    <title>编辑信息</title>
+    <link rel="stylesheet" href="../css/page-health-orderInfo.css"/>
+    <link rel="stylesheet" href="../plugins/elementui/index.css"/>
+    <script src="../plugins/jquery/dist/jquery.min.js"></script>
+    <script src="../plugins/healthmobile.js"></script>
+    <script src="../plugins/datapicker/datePicker.js"></script>
+    <script src="../plugins/vue/vue.js"></script>
+    <script src="../plugins/vue/axios-0.18.0.js"></script>
+    <script src="../plugins/elementui/index.js"></script>
+    <script>
+        var id = getUrlParam("id");//根据URL地址栏中的参数名称获取对应的值
+    </script>
+    <!-- head 中 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.3/style/weui.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.1/css/jquery-weui.min.css">
+
+    <!-- body 最后 -->
+    <script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-weui/1.2.1/js/jquery-weui.min.js"></script>
+
+    <!-- 如果使用了某些拓展插件还需要额外的JS -->
+    <script src="https://cdn.bootcss.com/jquery-weui/1.2.1/js/swiper.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-weui/1.2.1/js/city-picker.min.js"></script>
+<style>
+    .col-xs-2-5 { width:20%; float:left; position: relative; min-height: 1px;}
+</style>
+</head>
+   <body data-spy="scroll" data-target="#myNavbar" data-offset="150">
+<div class="app" id="app">
+    <!-- 页面头部 -->
+    <div class="top-header">
+        <span class="f-left"><i class="icon-back" onclick="history.go(-1)"></i></span>
+        <span class="center">个人体质计算器</span>
+        <span class="f-right"><i class="icon-more"></i></span>
+    </div>
+</div>
+
+
+<script>
+    /*弹窗*/
+    var gender = prompt("输入性别:", "");
+    var kg = +prompt("请输入您的体重(kg)：");
+    var m = +prompt("请输入您的身高(m)：");
+    var bmi = kg / (m * m);/*函数计算公式:体重除以身高的平方*/
+    if(bmi <= 18.4){
+        alert("您的BMI值是" + bmi.toFixed(1) + ",偏瘦，看你这一身排骨，是不是没钱买猪肉？");
+    } else if(bmi >= 18.5 && bmi <= 23.9){
+        alert("您的BMI值是" + bmi.toFixed(1) + ",正常，保持你健康的饮食吧！");
+    } else if(bmi >= 24.0 && bmi <= 27.9){
+        alert("您的BMI值是" + bmi.toFixed(1) + ",偏胖，少吃点大米吧！");
+    }else if (bmi>=28) {
+        alert("您的BMI值是" + bmi.toFixed(1) + ",肥胖，再不减你就废了！");
+    }else {
+        alert("您的BMI值是" + bmi.toFixed(1) + ",你是外星人吗?！")
+    }
+</script>
+<!--    <div class="item-title" style="color:white;font-size: 24px">减少体脂率四个方法:</div>-->
+<!--    <div class="box">-->
+<!--        <p><h3>方法一：选择合适的有氧运动</h3></p>-->
+<!--        <p>有氧运动是改善体内脂肪最好的方法之一，很多减肥的人都需要通过运动来改善，如果自己体脂含量过高，持续有规律的有氧运动馆是非常有必要的，因为肌肉是有记忆的，如果长期有锻炼，自己的体脂率会保持得更好，可以选择慢跑、游泳、骑自行车的运动。</p>-->
+<!--   <p><h3>方法二：多样化的运动方式</h3></p>-->
+<!--        <p>很多人一开始运动都是选择跑步，其实这样的运动方式是很枯燥的，我们可以交替着选择运动项目，比如周一慢跑，周二快步走，周三的时候去游泳或者骑自行车，这样的运动方式会没那么枯燥，自己也比较容易坚持下去。</p>-->
+<!--        <p><h3>方法三：杜绝高热量食物</h3></p>-->
+<!--        <p>高热量的食物一来不好消化，二来容易在人体内堆积更多的脂肪，在短时间内如果没有合理的运动，自己的体脂数会上升得很快，肥肉、油杂食品、高糖分的东西，这些食物都是不利于控制体脂的。</p>-->
+<!--        <p><h3>方法四：合理安排饮食</h3></p>-->
+<!--        <p>要控制体脂数，肯定要吃一些蛋白质高的食物，平时也要搭配好其他的蔬菜水果，鸡蛋、牛肉、鸡胸肉都是高蛋白的食物，绿色蔬菜也要适当吃一些。坚果类的食物往往含有有不饱和脂肪酸适当的吃一点点就好，可以减少自己体内的油脂。</p>-->
+<!--    </div>-->
+<!-- 页面内容 -->
+<div class="contentBox">
+    <div class="article">
+        <h2 class="title">减少体脂率四个方法:</h2>
+        <div class="box">
+            <p>方法一：选择合适的有氧运动</p>
+            <p>有氧运动是改善体内脂肪最好的方法之一，很多减肥的人都需要通过运动来改善，如果自己体脂含量过高，持续有规律的有氧运动馆是非常有必要的，因为肌肉是有记忆的，如果长期有锻炼，自己的体脂率会保持得更好，可以选择慢跑、游泳、骑自行车的运动。</p>
+            <p><h3>方法二：多样化的运动方式</h3></p>
+            <p>很多人一开始运动都是选择跑步，其实这样的运动方式是很枯燥的，我们可以交替着选择运动项目，比如周一慢跑，周二快步走，周三的时候去游泳或者骑自行车，这样的运动方式会没那么枯燥，自己也比较容易坚持下去。</p>
+            <p><h3>方法三：杜绝高热量食物</h3></p>
+            <p>高热量的食物一来不好消化，二来容易在人体内堆积更多的脂肪，在短时间内如果没有合理的运动，自己的体脂数会上升得很快，肥肉、油杂食品、高糖分的东西，这些食物都是不利于控制体脂的。</p>
+            <p><h3>方法四：合理安排饮食</h3></p>
+            <p>要控制体脂数，肯定要吃一些蛋白质高的食物，平时也要搭配好其他的蔬菜水果，鸡蛋、牛肉、鸡胸肉都是高蛋白的食物，绿色蔬菜也要适当吃一些。坚果类的食物往往含有有不饱和脂肪酸适当的吃一点点就好，可以减少自己体内的油脂。</p>
+
+        </div>
+    </div>
+</div>
+</div>
+</body>
+
+</html>

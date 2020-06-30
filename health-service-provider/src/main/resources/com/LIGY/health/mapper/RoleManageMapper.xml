@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.LIGY.health.mapper.RoleManageMapper">
+    <!--新增-->
+    <insert id="add" parameterType="role" >
+        insert into t_role(name,keyword,description)
+        VALUES
+        (#{name},#{keyword},#{description})
+    </insert>
+
+    <!--分页查询-->
+    <select id="selectByCondition" parameterType="string" resultType="com.LIGY.pojo.Role">
+        select * from t_role
+        <if test="value != null and value.length > 0">
+            where name = #{value} or keyword = #{value}
+        </if>
+    </select>
+
+
+    <!--绑定角色和权限-->
+    <insert id="setRoleAndPermission" parameterType="map">
+        insert into t_role_permission (role_id, permission_id)
+        VALUES (#{role_id},#{permission_id})
+    </insert>
+
+    <!--数据的回显-->
+    <select id="findPermissionIdsByRoleIds" resultType="int" parameterType="int">
+        select permission_id from t_role_permission where role_id = #{id}
+    </select>
+
+    <!--删除中间表的关系-->
+    <delete id="deleteAssociation" parameterType="Integer" >
+        DELETE  from t_role_permission WHERE  role_id = #{id}
+    </delete>
+
+    <!--查询所有角色-->
+    <select id="findAll" resultType="com.LIGY.pojo.Role">
+        select * from t_role
+    </select>
+</mapper>

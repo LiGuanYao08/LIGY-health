@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.LIGY.health.mapper.SportMapper">
+    <select id="selectByCondition" parameterType="string" resultType="sport">
+        select * from t_sport
+        <if test="value != null and value.length > 0">
+            where code = #{value}
+        </if>
+    </select>
+
+    <!--根据id查询-->
+    <select id="findById" resultType="com.LIGY.pojo.Sport" parameterType="Integer">
+        select * from t_sport where id = #{id}
+    </select>
+
+    <!--提交编辑表单-->
+    <update id="edit" parameterType="com.LIGY.pojo.Sport">
+        update t_sport
+        <set>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="namesport != null">
+                namesport = #{namesport},
+            </if>
+            <if test="intensity != null">
+                intensity = #{intensity},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Integer">
+
+        delete from t_sport where  id = #{id}
+    </delete>
+
+    <!--    <resultMap id="resultMap" type="ill">-->
+    <!--        <id column="setmeal_id" property="id"></id>-->
+    <!--        <result column="s_code" property="code"></result>-->
+    <!--        <result column="s_nameOfDisease" property="nameOfDisease"/>-->
+    <!--        <result column="s_type" property="type"/>-->
+    <!--        <result column="s_occupational" property="occupational"/>-->
+    <!--        <result column="s_gender" property="gender"/>-->
+    <!--        <result column="s_hospitaldate" property="hospitaldate"/>-->
+    <!--        <result column="s_hospitalroom" property="hospitalroom"/>-->
+    <!--        <result column="s_alarm" property="alarm"/>-->
+    <!--        <result column="s_othername" property="othername"/>-->
+    <!--        <result column="s_medicalExplanation" property="medicalExplanation"/>-->
+    <!--        <result column="s_causes" property="causes"/>-->
+    <!--        <result column="s_advice" property="advice"/>-->
+    <!--    </resultMap>-->
+
+    <insert id="add" parameterType="com.LIGY.pojo.Sport">
+        insert into t_sport(code,namesport,intensity,quantity,time,age)
+        VALUES (#{code},#{namesport},#{intensity},#{quantity},#{time},#{age})
+    </insert>
+
+    <resultMap id="resultMap" type="sport">
+        <id column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="namesport" property="namesport"/>
+        <result column="intensity" property="intensity"/>
+        <result column="quantity" property="quantity"/>
+        <result column="time" property="time"/>
+        <result column="age" property="age"/>
+    </resultMap>
+</mapper>

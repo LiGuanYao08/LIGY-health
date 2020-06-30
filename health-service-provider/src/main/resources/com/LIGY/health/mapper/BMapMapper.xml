@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.LIGY.health.mapper.BMapMapper">
+    <!--分页查询-->
+    <select id="selectByCondition" parameterType="string" resultType="com.LIGY.pojo.BMap">
+        select * from t_map
+        <if test="value != null and value.length > 0">
+            where name like "%"#{value}"%"
+        </if>
+    </select>
+    <!--查询所有-->
+    <select id="findAll" resultType="com.LIGY.pojo.BMap">
+        select * from t_map
+    </select>
+    <!--查询地址-->
+    <select id="findAddress" resultType="string">
+        SELECT id text ,NAME value FROM t_map
+    </select>
+    <!--新增地址-->
+    <insert id="add" parameterType="bmap">
+        insert into t_map (name, xoffse, yoffse) VALUES (#{name},#{xoffse},#{yoffse})
+    </insert>
+    <!--删除地址-->
+    <delete id="deleteById" parameterType="Integer">
+        delete from t_map where id = #{id}
+    </delete>
+    <!--删除前检查外键-->
+    <select id="findCountByCheck" parameterType="Integer" resultType="long">
+        select count(*) from t_order where address_id = #{id}
+    </select>
+</mapper>
